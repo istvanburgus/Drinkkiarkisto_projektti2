@@ -1,19 +1,15 @@
 <?php
-// FI: Ladataan tietokantayhteyden asetukset
-// HU: Betöltjük az adatbázis kapcsolat beállításait
+// Ladataan tietokantayhteyden asetukset
 include 'db.php';
 
-// FI: Aloitetaan sessio käyttäjätietojen tallentamista varten
-// HU: Elindítjuk a munkamenetet a felhasználói adatok tárolásához
+// Aloitetaan sessio käyttäjätietojen tallentamista varten
 session_start();
 
-// FI: Haetaan mahdollinen virheviesti sessiosta, ja tyhjennetään se sen jälkeen
-// HU: Lekérjük a esetleges hibaüzenetet a munkamenetből, majd töröljük azt
+// Haetaan mahdollinen virheviesti sessiosta, ja tyhjennetään se sen jälkeen
 $error = $_SESSION['error'] ?? '';
 unset($_SESSION['error']);
 
-// FI: Jos käyttäjä on jo kirjautunut, ohjataan oikealle sivulle
-// HU: Ha a felhasználó már be van jelentkezve, irányítsuk a megfelelő oldalra
+// Jos käyttäjä on jo kirjautunut, ohjataan oikealle sivulle
 if (isset($_SESSION['name'])) {
     if (isset($_SESSION['role']) && $_SESSION['role'] == 1) {
         header("Location: naviAdmin.php");
@@ -29,52 +25,42 @@ if (isset($_POST['logout'])) {
 }
 
 try {
-    // FI: Muodostetaan yhteys MySQL-tietokantaan PDO:n avulla
-    // HU: Kapcsolódunk a MySQL adatbázishoz PDO segítségével
+    // Muodostetaan yhteys MySQL-tietokantaan PDO:n avulla
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
 
-    // FI: Asetetaan PDO heittämään poikkeuksia virheiden sattuessa
-    // HU: Beállítjuk a PDO-t, hogy kivételeket dobjon hiba esetén
+    // Asetetaan PDO heittämään poikkeuksia virheiden sattuessa
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // FI: Tarkistetaan, onko kyseessä POST-pyyntö (lomakkeen lähetys)
-    // HU: Ellenőrizzük, hogy POST kérésről van-e szó (űrlap beküldése)
+    // Tarkistetaan, onko kyseessä POST-pyyntö (lomakkeen lähetys)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // FI: Haetaan ja siivotaan käyttäjän syöttämä käyttäjätunnus ja salasana
-        // HU: Lekérjük és megtisztítjuk a felhasználó által megadott nevet és jelszót
+        // Haetaan ja siivotaan käyttäjän syöttämä käyttäjätunnus ja salasana
         $user = trim($_POST['username'] ?? '');
         $pass = $_POST['password'] ?? '';
 
-        // FI: Tarkistetaan, että molemmat kentät on täytetty
-        // HU: Ellenőrizzük, hogy mindkét mező ki van-e töltve
+        // Tarkistetaan, että molemmat kentät on täytetty
         if (strlen($user) === 0 || strlen($pass) === 0) {
             $_SESSION['error'] = "Username and password are required";
 
-            // FI: Ohjataan käyttäjä takaisin kirjautumissivulle
-            // HU: Visszairányítjuk a felhasználót a bejelentkezési oldalra
+            // Ohjataan käyttäjä takaisin kirjautumissivulle
             header("Location: login.php");
             exit();
         }
 
-        // FI: Haetaan käyttäjä ja rooli tietokannasta käyttäjätunnuksen perusteella
-        // HU: Lekérjük a felhasználót és szerepkört az adatbázisból a felhasználónév alapján
+        // Haetaan käyttäjä ja rooli tietokannasta käyttäjätunnuksen perusteella
         $sql = "SELECT Kayttajanimi, Salasana, Rooli FROM Kayttaja WHERE Kayttajanimi = :username LIMIT 1";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':username' => $user]);
         $check = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // FI: Tarkistetaan löytyikö käyttäjä ja onko salasana oikein
-        // HU: Ellenőrizzük, hogy megtalálható-e a felhasználó és helyes-e a jelszó
+        // Tarkistetaan löytyikö käyttäjä ja onko salasana oikein
         if ($check && password_verify($pass, $check['Salasana'])) {
 
-            // FI: Tallennetaan käyttäjätunnus ja rooli sessioon
-            // HU: Eltároljuk a felhasználónevet és szerepkört a munkamenetben
+            // Tallennetaan käyttäjätunnus ja rooli sessioon
             $_SESSION['name'] = $check['Kayttajanimi'];
             $_SESSION['role'] = $check['Rooli'];
 
-            // FI: Ohjataan käyttäjä rooliin perustuen oikealle sivulle
-            // HU: A szerepkör alapján irányítjuk a felhasználót a megfelelő oldalra
+            // Ohjataan käyttäjä rooliin perustuen oikealle sivulle
             if ($_SESSION['role'] == 1) {
                 header("Location: naviAdmin.php");
             } else {
@@ -83,16 +69,14 @@ try {
             exit();
         } else {
 
-            // FI: Väärä tunnus tai salasana – ohjataan takaisin virheviestin kera
-            // HU: Hibás felhasználónév vagy jelszó – visszairányítunk hibaüzenettel
+            // Väärä tunnus tai salasana – ohjataan takaisin virheviestin kera
             $_SESSION['error'] = "Incorrect username or password";
             header("Location: login.php");
             exit();
         }
     }
 } catch (PDOException $e) {
-    // FI: Tietokantayhteys epäonnistui – näytetään virheilmoitus
-    // HU: Az adatbázis kapcsolat sikertelen – megjelenítjük a hibaüzenetet
+    // Tietokantayhteys epäonnistui – näytetään virheilmoitus
     echo "Connection failed: " . $e->getMessage();
 }
 ?>
@@ -108,46 +92,38 @@ try {
 </head>
 
 <body>
-    <!-- FI: Yläpalkki sivuston nimellä ja rekisteröitymislinkillä -->
-    <!-- HU: Fejléc sáv az oldal nevével és a regisztrációs linkkel -->
+    <!-- Yläpalkki sivuston nimellä ja rekisteröitymislinkillä -->
     <div id="bar">
         <div>Drinkkinarkisto</div>
         <a href="register.php" id="login_button">Rekisteröidy</a>
     </div>
 
     <main>
-        <!-- FI: Kirjautumislomakkeen säiliö -->
-        <!-- HU: A bejelentkezési űrlap tárolója -->
+        <!-- Kirjautumislomakkeen säiliö -->
         <div id="loginbar">
 
-            <!-- FI: Näytetään virheviesti, jos sellainen on olemassa -->
-            <!-- HU: Megjelenítjük a hibaüzenetet, ha van ilyen -->
+            <!-- Näytetään virheviesti, jos sellainen on olemassa -->
             <?php if (!empty($error)) : ?>
                 <div class="error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <!-- FI: Kirjautumislomake, lähetetään samalle sivulle POST-metodilla -->
-            <!-- HU: Bejelentkezési űrlap, POST metódussal ugyanerre az oldalra küldjük -->
+            <!-- Kirjautumislomake, lähetetään samalle sivulle POST-metodilla -->
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
-                <!-- FI: Käyttäjätunnus-kenttä -->
-                <!-- HU: Felhasználónév mező -->
+                <!-- Käyttäjätunnus-kenttä -->
                 <input type="text" id="username" name="username" required placeholder="Käyttäjätunnus" />
 
-                <!-- FI: Salasana-kenttä -->
-                <!-- HU: Jelszó mező -->
+                <!-- Salasana-kenttä -->
                 <input type="password" id="password" name="password" required placeholder="Salasana" />
 
-                <!-- FI: Lähetä-painike -->
-                <!-- HU: Küldés gomb -->
+                <!-- Lähetä-painike -->
                 <button type="submit">Kirjaudu sisään</button>
 
             </form>
         </div>
     </main>
 
-    <!-- FI: Alatunniste -->
-    <!-- HU: Lábléc -->
+
     <footer>
         2025 Drinkkinarkisto
     </footer>
