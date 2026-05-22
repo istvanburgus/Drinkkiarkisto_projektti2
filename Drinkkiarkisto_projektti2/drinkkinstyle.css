@@ -1,0 +1,219 @@
+/* Alap beállítások és oldal struktúra */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Tahoma, sans-serif;
+    background-color: #f4f1ec;
+    display: flex;
+    flex-direction: column;
+}
+
+/* A body-n belül a fő tartalom kitölti a fennmaradó helyet */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Itt jön a fontos javítás: a form mérete és középre helyezése */
+form {
+    width: 100%;
+    max-width: 350px; /* max szélesség megegyezik a #loginbar szélességével */
+}
+
+/* Felső sötétbarna sáv */
+#bar {
+    background-color: #5c4033;
+    color: #f4f1ec;
+    padding: 20px;
+    font-size: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Login gomb a felső sávban */
+#login_button {
+    background-color: #8b5e3c;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+#login_button:hover {
+    background-color: #75492f;
+}
+
+/* Login box stílus */
+#loginbar {
+    background-color: #ffffff;
+    width: 350px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+#loginbar input[type="email"],
+#loginbar input[type="password"],
+#loginbar input[type="text"] {
+    width: 90%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#loginbar input[type="submit"],
+#loginbar button {
+    width: 100%;
+    padding: 10px;
+    background-color: #5c4033;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#loginbar input[type="submit"]:hover,
+#loginbar button:hover {
+    background-color: #8b5e3c;
+}
+
+/* --- ÚJ: Aines hozzáadása rész --- */
+
+header {
+    background-color: #8b5e3c;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 2px solid #6f4529;
+}
+
+/* Tartalom középre rendezése */
+.container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Input mező – nagyobb és esztétikusabb */
+.container input[type="text"] {
+    padding: 12px;
+    font-size: 18px;
+    width: 250px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+/* Gomb stílus */
+.container button {
+    padding: 12px 20px;
+    font-size: 18px;
+    background-color: #8b5e3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.container button:hover {
+    background-color: #6f4529;
+}
+
+/* Üzenet szöveg (pl. már létezik) */
+.message, .error {
+    margin-top: 20px;
+    font-size: 18px;
+    color: red;
+}
+
+/* Lista stílus */
+.ingredient-list {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.ingredient-list h2 {
+    margin-bottom: 10px;
+}
+
+.ingredient-list p {
+    font-size: 18px;
+    margin: 8px 0;
+}
+
+.ingredient-list strong {
+    font-weight: bold;
+}
+
+/* Egyszerű lábléc - mindig az oldal alján */
+footer {
+    background-color: #8b5e3c;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    border-top: 2px solid #75492f;
+}
+
+@media (max-width: 800px) {
+    /* Input és gomb szélesség legyen 90% a kisebb kijelzőkön */
+    .container input[type="text"],
+    .container button {
+        width: 90%;
+        font-size: 16px;
+    }
+    
+    /* A felső sáv elemei is átrendeződnek */
+    #bar {
+        flex-direction: column;
+        text-align: center;
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    #login_button {
+        margin-top: 10px;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    /* A lábléc betűmérete is legyen kisebb */
+    footer {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+nav {
+    background-color: #5c4033;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 2px solid #75492f;
+}
+
+/* FONTOS: explicit szín, hogy felülírja az alapértelmezett kék link színt */
+nav a {
+    color: #f4f1ec;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Hover effekt */
+nav a:hover {
+    color: #d2b48c;
+    text-decoration: underline;
+}
